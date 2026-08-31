@@ -6,6 +6,9 @@
 #  - Computes headwind/tailwind & crosswind in Python
 #  - Builds a single-day wind rose from that sample
 
+import sys
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 import duckdb
@@ -14,10 +17,8 @@ import streamlit as st
 
 # ---- CONFIG ----
 
-DATA_PATH = (
-    "/home/rghuglot/services/overflights/lib/overflight_data/"
-    "fuel_wind_rows_nov01_07_enriched_all.parquet"
-)
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from config import FUEL_WIND_PATH as DATA_PATH
 
 MPS_TO_KT = 1.943844  # m/s → knots
 

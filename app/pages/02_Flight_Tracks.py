@@ -8,6 +8,9 @@ enter / exit altitude bands, directions, and sampling.
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 import duckdb
@@ -18,10 +21,8 @@ import streamlit as st
 # Configuration
 # ---------------------------------------------------------------------
 
-DATA_PATH = (
-    "/home/rghuglot/services/overflights/lib/overflight_data/"
-    "fuel_wind_rows_nov01_07_enriched_all.parquet"
-)
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from config import FUEL_WIND_PATH as DATA_PATH
 
 ALT_MIN = 20_000
 ALT_MAX = 43_000
@@ -166,8 +167,9 @@ def fast_sample(df: pd.DataFrame, max_aircraft: int, max_points: int) -> pd.Data
 
 def make_flight_map(df: pd.DataFrame):
     """
-    Build the Plotly map figure using line_mapbox and the
-    cardinal_direction colors. Also overlays the corridor NAVAIDs.
+    Build the Plotly map figure using line_map (MapLibre-based; replaces the
+    deprecated/removed line_mapbox in Plotly >= 6) and the cardinal_direction
+    colors. Also overlays the corridor NAVAIDs.
     """
     if df.empty:
         return None
@@ -179,7 +181,7 @@ def make_flight_map(df: pd.DataFrame):
         "W": "#2ca02c",  # green
     }
 
-    fig = px.line_mapbox(
+    fig = px.line_map(
         df,
         lat="lat",
         lon="lon",
@@ -198,7 +200,7 @@ def make_flight_map(df: pd.DataFrame):
     )
 
     fig.update_layout(
-        mapbox_style="carto-positron",
+        map_style="carto-positron",
         margin=dict(l=0, r=0, t=0, b=0),
         legend_title_text="Direction",
     )
@@ -219,7 +221,7 @@ def make_flight_map(df: pd.DataFrame):
         {"id": "AML", "lat": 38.9345925, "lon": -77.4667017},
     ]
 
-    fig.add_scattermapbox(
+    fig.add_scattermap(
         lat=[n["lat"] for n in navaids],
         lon=[n["lon"] for n in navaids],
         mode="markers+text",

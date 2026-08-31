@@ -15,6 +15,7 @@ This version:
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -25,13 +26,11 @@ from plotly.subplots import make_subplots
 import streamlit as st
 
 # ---------------------------------------------------------------------
-# Paths – adjust if you move the data
+# Paths – see app/config.py (override with OVERFLIGHTS_DATA_DIR env var)
 # ---------------------------------------------------------------------
 
-BASE = Path("/home/rghuglot/services/overflights")
-LIB = BASE / "lib" / "overflight_data"
-
-ROWS_PATH = LIB / "maneuver_summaries_v2" / "maneuvers_rows.parquet"
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from config import MANEUVERS_ROWS_PATH as ROWS_PATH
 
 # BWI–NY corridor bounds (same idea as Flight Tracks page)
 CORRIDOR_LAT_MIN = 39.0
@@ -275,7 +274,7 @@ def make_maneuver_map(df_rows: pd.DataFrame) -> go.Figure | None:
     if len(df) > max_points:
         df = df.sample(max_points, random_state=42)
 
-    fig = px.scatter_mapbox(
+    fig = px.scatter_map(
         df,
         lat="lat",
         lon="lon",
@@ -286,7 +285,7 @@ def make_maneuver_map(df_rows: pd.DataFrame) -> go.Figure | None:
         height=500,
     )
     fig.update_layout(
-        mapbox_style="carto-positron",
+        map_style="carto-positron",
         margin=dict(l=0, r=0, t=30, b=0),
         legend_title_text="Maneuver type",
         template="plotly_dark",

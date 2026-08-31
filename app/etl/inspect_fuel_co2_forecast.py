@@ -9,13 +9,13 @@ Quick inspection of daily fuel & CO2 forecast.
 
 from __future__ import annotations
 
+import sys
 import duckdb
 import pandas as pd
 from pathlib import Path
 
-FORECAST_PATH = Path(
-    "/home/rghuglot/services/overflights/lib/overflight_data/fuel_co2_daily_forecast.parquet"
-)
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from config import FORECAST_PATH
 
 
 def load_forecast() -> pd.DataFrame:

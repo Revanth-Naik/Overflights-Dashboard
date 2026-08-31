@@ -12,6 +12,7 @@ Reads the daily history + 7-day forecast from
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 from typing import Tuple
 
@@ -24,11 +25,8 @@ import streamlit as st
 # Config
 # ----------------------------------------------------------------------
 
-# Absolute path is fine for the server you’re on.
-FORECAST_PATH = Path(
-    "/home/rghuglot/services/overflights/lib/overflight_data/"
-    "fuel_co2_daily_forecast.parquet"
-)
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from config import FORECAST_PATH
 
 
 # ----------------------------------------------------------------------

@@ -17,6 +17,7 @@ It shows:
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 from typing import List, Tuple
 
@@ -31,10 +32,8 @@ import streamlit as st
 # Config
 # ---------------------------------------------------------------------
 
-DATA_PATH = Path(
-    "/home/rghuglot/services/overflights/lib/overflight_data/"
-    "fuel_wind_rows_nov01_07_enriched_all.parquet"
-)
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from config import FUEL_WIND_PATH as DATA_PATH
 
 SUMMARY_HOURS: List[int] = [0, 6, 12, 18]
 

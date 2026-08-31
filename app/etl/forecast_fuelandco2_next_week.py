@@ -22,16 +22,14 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from config import DAILY_FEATURES_PATH, FORECAST_PATH
 
 # ---------------------------------------------------------------------
-# Paths (adjust only if you change your directory layout)
+# Paths – see app/config.py (override with OVERFLIGHTS_DATA_DIR env var)
 # ---------------------------------------------------------------------
-FEATURES_PATH = Path(
-    "/home/rghuglot/services/overflights/lib/overflight_data/fuel_co2_daily_features.parquet"
-)
-FORECAST_OUT = Path(
-    "/home/rghuglot/services/overflights/lib/overflight_data/fuel_co2_daily_forecast.parquet"
-)
+FEATURES_PATH = DAILY_FEATURES_PATH
+FORECAST_OUT = FORECAST_PATH
 
 
 def fit_linear_trend(x: np.ndarray, y: np.ndarray) -> tuple[float, float]:

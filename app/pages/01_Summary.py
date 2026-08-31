@@ -5,15 +5,16 @@
 Dashboard overview + weekly flight / fuel / CO2 summary.
 """
 
+import sys
+from pathlib import Path
+
 import duckdb
 import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-DATA_PATH = (
-    "/home/rghuglot/services/overflights/lib/overflight_data/"
-    "fuel_wind_rows_nov01_07_enriched_all.parquet"
-)
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from config import FUEL_WIND_PATH as DATA_PATH
 
 KGS_TO_TONS = 1.0 / 1000.0
 
@@ -99,7 +100,7 @@ def main() -> None:
         labels={"day": "Day", "flights": "Number of unique aircraft (proxy for flights)"},
         title="Flights per day",
     )
-    st.plotly_chart(fig_flights, use_container_width=True)
+    st.plotly_chart(fig_flights, width="stretch")
 
     # -------- Daily fuel and CO2 --------
     st.subheader("Daily fuel and CO₂")
@@ -114,7 +115,7 @@ def main() -> None:
             labels={"day": "Day", "total_fuel_kg": "Fuel (kg)"},
             title="Total fuel per day",
         )
-        st.plotly_chart(fig_fuel, use_container_width=True)
+        st.plotly_chart(fig_fuel, width="stretch")
 
     with col2:
         fig_co2 = px.bar(
@@ -124,7 +125,7 @@ def main() -> None:
             labels={"day": "Day", "total_co2_kg": "CO₂ (kg)"},
             title="Total CO₂ per day",
         )
-        st.plotly_chart(fig_co2, use_container_width=True)
+        st.plotly_chart(fig_co2, width="stretch")
 
     # -------- Distributions per aircraft-day --------
     st.subheader("Fuel and CO₂ per aircraft-day (flight proxy)")
@@ -139,7 +140,7 @@ def main() -> None:
             labels={"fuel_kg": "Fuel per aircraft-day (kg)", "count": "Number of aircraft-days"},
             title="Fuel distribution",
         )
-        st.plotly_chart(fig_hist_fuel, use_container_width=True)
+        st.plotly_chart(fig_hist_fuel, width="stretch")
 
     with col4:
         fig_hist_co2 = px.histogram(
@@ -149,7 +150,7 @@ def main() -> None:
             labels={"co2_kg": "CO₂ per aircraft-day (kg)", "count": "Number of aircraft-days"},
             title="CO₂ distribution",
         )
-        st.plotly_chart(fig_hist_co2, use_container_width=True)
+        st.plotly_chart(fig_hist_co2, width="stretch")
 
     st.markdown(
         """
@@ -175,7 +176,7 @@ The long tail to the right reflects a small number of long or heavy flights.
                 "aircraft_days": "Number of aircraft-days",
             }
         ),
-        use_container_width=True,
+        width="stretch",
     )
 
 

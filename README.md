@@ -175,7 +175,30 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 2. Run the Streamlit app:
+### 2. Get some data in place (pick one)
+
+**Option A — try it now with synthetic sample data** (no real data needed):
+
+```bash
+python scripts/generate_sample_data.py
+```
+
+This writes small fake parquet files (same schema as the real dataset) into
+`data/` at the repo root, and runs the real ETL scripts against them to
+produce the daily-features and forecast files too. Good for a quick
+click-through of every page; the numbers are not real.
+
+**Option B — point at the real data**, wherever it lives (the VM path, a
+mounted drive, another folder), without editing any code:
+
+```bash
+export OVERFLIGHTS_DATA_DIR=/home/rghuglot/services/overflights/lib/overflight_data
+```
+
+(or copy/symlink the real parquet files into `data/` at the repo root,
+matching the layout below — that's the default when the env var isn't set).
+
+### 3. Run the Streamlit app:
 
 ```bash
 cd app
@@ -186,19 +209,21 @@ streamlit run app_overflights_dashboard.py
 
 ## 📦 **Data Handling**
 
-Raw data is NOT stored in GitHub.  
-Data files live on the VM:
+Raw data is NOT stored in GitHub (see `.gitignore`). All data paths are
+centralized in `app/config.py`, which resolves to `data/` at the repo root
+by default, or to `$OVERFLIGHTS_DATA_DIR` if that environment variable is
+set — no hardcoded machine-specific paths in the page/ETL code anymore.
+
+Expected layout, wherever `DATA_DIR` points:
 
 ```
-~/services/overflights/lib/overflight_data/
+data/
+├── fuel_wind_rows_nov01_07_enriched_all.parquet
+├── fuel_co2_daily_features.parquet
+├── fuel_co2_daily_forecast.parquet
+└── maneuver_summaries_v2/
+    └── maneuvers_rows.parquet
 ```
-
-These include:
-
-- `fuel_wind_rows_nov01_07_enriched_all.parquet`
-- `maneuvers_rows.parquet`
-- `fuel_co2_daily_features.parquet`
-- `fuel_co2_daily_forecast.parquet`
 
 ---
 

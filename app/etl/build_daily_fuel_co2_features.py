@@ -11,18 +11,15 @@ Output:
         fuel_co2_daily_features.parquet
 """
 
+import sys
 from pathlib import Path
 import duckdb
 
-INPUT_PATH = (
-    "/home/rghuglot/services/overflights/lib/overflight_data/"
-    "fuel_wind_rows_nov01_07_enriched_all.parquet"
-)
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from config import FUEL_WIND_PATH, DAILY_FEATURES_PATH
 
-OUTPUT_PATH = (
-    "/home/rghuglot/services/overflights/lib/overflight_data/"
-    "fuel_co2_daily_features.parquet"
-)
+INPUT_PATH = str(FUEL_WIND_PATH)
+OUTPUT_PATH = str(DAILY_FEATURES_PATH)
 
 
 def main() -> None:
